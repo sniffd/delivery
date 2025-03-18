@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: delivery
+  datasource:
+    url: jdbc:postgresql://localhost:5432/delivery
+    username: postgres
+    password: postgres
