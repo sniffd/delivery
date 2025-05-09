@@ -11,7 +11,7 @@ class Courier(
     var location: Location
 ) {
 
-    val id = UUID.randomUUID()
+    val id: UUID = UUID.randomUUID()
     var status = CourierStatus.FREE
     val transport = Transport(
         name = transportName,
@@ -31,4 +31,15 @@ class Courier(
     fun moveToOrder(order: Order) {
         location = transport.moveCloserTo(location, order.location)
     }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as Courier
+
+        return id == other.id
+    }
+
+    override fun hashCode() = id.hashCode()
 }
