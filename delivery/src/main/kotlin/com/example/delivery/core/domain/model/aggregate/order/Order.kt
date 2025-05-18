@@ -3,13 +3,14 @@ package com.example.delivery.core.domain.model.aggregate.order
 import com.example.delivery.core.domain.sharedkernel.Location
 import java.util.UUID
 
-class Order(
+class Order private constructor(
     val id: UUID,
     val location: Location,
+    var status: OrderStatus,
+    var courierId: UUID?
 ) {
 
-    var status: OrderStatus = OrderStatus.CREATED
-    var courierId: UUID? = null
+    constructor(id: UUID, location: Location) : this(id, location, OrderStatus.CREATED, null)
 
     fun assign(courierId: UUID) {
         this.courierId = courierId
@@ -32,4 +33,15 @@ class Order(
     }
 
     override fun hashCode() = id.hashCode()
+
+    companion object {
+
+        fun restore(id: UUID, location: Location, status: OrderStatus, courierId: UUID?) =
+            Order(
+                id = id,
+                location = location,
+                status = status,
+                courierId = courierId
+            )
+    }
 }

@@ -4,19 +4,25 @@ import com.example.delivery.core.domain.model.aggregate.order.Order
 import com.example.delivery.core.domain.sharedkernel.Location
 import java.util.UUID
 
-class Courier(
+class Courier private constructor(
+    val id: UUID,
     val name: String,
-    transportName: String,
-    transportSpeed: Int,
-    var location: Location
+    val transport: Transport,
+    var location: Location,
+    var status: CourierStatus
 ) {
 
-    val id: UUID = UUID.randomUUID()
-    var status = CourierStatus.FREE
-    val transport = Transport(
-        name = transportName,
-        speed = transportSpeed
-    )
+    constructor(name: String, transportName: String, transportSpeed: Int, location: Location) :
+            this(
+                id = UUID.randomUUID(),
+                name = name,
+                transport = Transport(
+                    name = transportName,
+                    speed = transportSpeed
+                ),
+                location = location,
+                status = CourierStatus.FREE
+            )
 
     fun countSteps(order: Order): Int {
         val diff = location.countStepsTo(order.location)
@@ -42,4 +48,16 @@ class Courier(
     }
 
     override fun hashCode() = id.hashCode()
+
+    companion object {
+
+        fun restore(id: UUID, name: String, transport: Transport, location: Location, status: CourierStatus) =
+            Courier(
+                id = id,
+                name = name,
+                transport = transport,
+                location = location,
+                status = status
+            )
+    }
 }
